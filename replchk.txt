@@ -1,0 +1,1972 @@
+replchk output:
+
+Symmetrix ID: 000196801696
+
+                               Local Device View                             
+-----------------------------------------------------------------------------
+                     STATUS    MODES                      RDF  S T A T E S   
+Sym   Sym    RDF     --------- -----  R1 Inv   R2 Inv  ----------------------
+Dev   RDev   Typ:G   SA RA LNK MDATE  Tracks   Tracks  Dev RDev Pair         
+----- ----- -------- --------- ----- -------- -------- --- ---- -------------
+
+0002C 00043   R1:1   RW RW NR  A..1.        0  1959521 RW  WD   Suspended     
+0002D 0002A   R1:1   RW RW NR  A..1.        0  1080818 RW  WD   Suspended     
+0002E 00042   R1:2   RW RW RW  A..1.        0        0 RW  WD   SyncInProg    
+0002F 00044   R1:2   RW RW RW  A..1.        0        0 RW  WD   SyncInProg    
+00030 00040   R1:3   RW RW RW  A..1.        0        0 RW  WD   Consistent    
+00031 0002E   R1:3   RW RW RW  A..1.        0        0 RW  WD   Consistent    
+00032 0003F   R1:4   RW RW RW  A..1.        0        0 RW  WD   Consistent    
+00033 0002F   R1:4   RW RW RW  A..1.        0        0 RW  WD   Consistent    
+00034 0003E   R1:8   RW RW RW  A..1.        0        0 RW  WD   Consistent    
+00035 00041   R1:8   RW RW RW  A..1.        0        0 RW  WD   Consistent    
+0004B 0002C   R1:5   RW RW RW  A..1.        0        0 RW  WD   Consistent    
+00052 0004A   R1:1   RW RW NR  A..1.        0  1436764 RW  WD   Suspended     
+00054 0004B   R1:2   RW RW RW  A..1.        0   169433 RW  WD   SyncInProg    
+
+Total                                -------- --------
+  Track(s)                                  0  4646536
+  MB(s)                                   0.0 580817.0
+
+Legend for MODES:
+
+ (M)ode of Operation : A = Async, S = Sync, E = Semi-sync, C = Adaptive Copy
+                     : M = Mixed, T = Active
+ (D)omino            : X = Enabled, . = Disabled
+ (A)daptive Copy     : D = Disk Mode, W = WP Mode, . = ACp off
+ Mirror (T)ype       : 1 = R1, 2 = R2
+ Consistency (E)xempt: X = Enabled, . = Disabled, M = Mixed, - = N/A
+
+------------------------------------------------------------------------------------------------------------------
+
+Notes:
+***symrdf resume -file rdfg1.txt -sid 696 -rdfg 1 -noprompt***
+
+PS D:\VMAX_CLI_Files> symrdf -help
+NAME
+
+     symrdf - Performs a Symmetrix ping to all Symmetrix arrays
+              or a specified Symmetrix array. Lists all or
+              selected SRDF devices on a Symmetrix array.
+              Performs Symmetrix SRDF control or set mode
+              operations on a group of devices, or on one
+              device pair. A group of device pairs can be
+              specified using device group, composite group,
+              storage group or device file. Performs Symmetrix
+              SRDF query or verify on a group of devices.
+
+              Also performs dynamic SRDF operations:
+              Adding and modifying dynamic SRDF groups,
+              and creating and deleting SRDF pairs.
+
+SYNOPSIS
+
+     symrdf -h
+
+     symrdf [-sid <SymmID>] [-i <Interval>] [-c <Count>] [-rdf]
+
+        ping
+
+     symrdf [-sid <SymmID>] [-i <Interval>] [-c <Count>]
+          [-offline] [-v]
+          [-all]
+          [-rdfg <GrpNum>] [-bcv | -nobcv] [-rdfa] [-resv]
+          [-consistency] [-concurrent] [-rdf_metro]
+          [-cascade] [-diskless_rdf]
+          [[-R1 | -R2 | -R21] |
+           [-dynamic [-R1 | -R2 | -BOTH]]]
+          [-half_pair] [-dup_pair] [-star_mode]
+          [-star_sync_target] [-star_async_target]
+          [-cons_exempt] [-rdfa_wpace_exempt]
+          [-rdfa_not_pace_capable]
+
+        list [dev]
+
+        list pd
+
+     symrdf -sid <SymmID> -rdfg <GrpNum> [-v]
+          [-noprompt] [-i <Interval>] [-c <Count>]
+          [-star]
+
+        activate    <<-rdfa_dse [-both_sides]> |
+                     <-rdfa_pace | -rdfa_wpace | -rdfa_devpace
+                      [-force]>>
+
+        deactivate  <<-rdfa_dse [-both_sides]> | -rdfa_wpace |
+                     <<-rdfa_pace | -rdfa_devpace> [-symforce]>>
+
+        msc_cleanup
+
+        set rdfg    <[-limbo <Secs>]
+                     [-domino <State>]
+                     [-autolink_recovery <State>]
+                     [-hwcomp <State>]
+                     [-swcomp <State>]>
+                     [-both_sides]
+
+        set rdfa    <[-cycle_time <CycleTime>]
+                     [-priority <SessPriority>]
+                     [-transmit_idle <State>]>
+                     [-both_sides]
+
+        set rdfa_pace
+                    <[-dp_autostart <State>]
+                     [-wp_autostart <State>]
+                     [-delay <WpaceDelay>]
+                     [-threshold <WpaceThreshold>]>
+                     [-both_sides]
+
+        set rdfa_dse
+                    <[-autostart <State>]
+                     [-threshold <DseThreshold>]
+                     [-fba_pool <PoolName>]
+                     [-ckd3390_pool <PoolName>]
+                     [-ckd3380_pool <PoolName>]
+                     [-as400_pool <PoolName>]>
+                     [-both_sides]
+
+        set label <GrpLabel>
+
+Device Groups
+
+     symrdf -g <DgName> [-v | -noecho] [-force] [-symforce]
+          [-bypass] [-noprompt] [-i <Interval>] [-c <Count>]
+          [-hop2 | -bcv [-hop2] | -all | -rbcv | -brbcv]
+          [-rdfg <GrpNum>] [-star]
+
+        deletepair
+
+        establish [-full] [<LdevName> [<LdevName>...]]
+
+        failback  [-remote] [-rp] [<LdevName> [<LdevName>...]]
+
+        failover  [<LdevName> [<LdevName>...]]
+                  [-establish | -restore [-remote]]
+
+        half_deletepair
+
+        half_movepair -new_rdfg <GrpNum>
+
+        half_swap
+
+        merge     [-rp] [<LdevName> [<LdevName>...]]
+
+        movepair -new_rdfg <GrpNum>
+
+        restore   [-remote] [-rp] [-full]
+                  [<LdevName> [<LdevName>...]]
+
+        resume    [-remote] [-rp] [<LdevName> [<LdevName>...]]
+
+        split     [<LdevName> [<LdevName>...]]
+
+        swap   [-refresh R1|R2]
+
+        suspend   [<LdevName> [<LdevName>...]]
+
+        update    [-remote] [-rp] [-until <InvalidTracks>]
+                  [<LdevName>...]
+
+        invalidate <R1|R2> [<LdevName> [<LdevName>...]] [-nowd]
+
+        not_ready  <R1|R2> [<LdevName> [<LdevName>...]]
+
+        ready      <R1|R2> [<LdevName> [<LdevName>...]]
+
+        refresh    <R1|R2> [-rp] [<LdevName> [<LdevName>...]]
+
+        rw_disable R2 [<LdevName> [<LdevName>...]]
+
+        rw_enable     <R1|R2> [<LdevName> [<LdevName>...]]
+
+        write_disable <R1|R2> [<LdevName> [<LdevName>...]]
+
+     symrdf -g <DgName>
+          [-hop2 | -bcv [-hop2] | -rbcv | -brbcv | -all]
+          [-offline] [-i <Interval>] [-c <Count>]
+          [-rdfg <GrpNum>]
+
+        query [-rdfa | -summary] [<LdevName> [<LdevName>...]]
+
+        verify [-summary]
+          [-enabled | -synchronized | -suspended |
+           -susp_offline | -split | -failedover | -updated |
+           -syncinprog | -updateinprog | -partitioned |
+           -valid | -consistent [-noinvalids] |
+           -acp_disk | -acp_wp | -asynchronous |
+           -semisynchronous | -synchronous]
+           [<LdevName> [<LdevName>...]]
+
+     symrdf -g <DgName> [-v] [-bypass] [-force] [-star]
+          [-noprompt] [-i <Interval>] [-c <Count>]
+          [-hop2 | -bcv [-hop2] | -rbcv | -brbcv | -all]
+          [-rdfg <GrpNum>]
+
+        set acp_skew <SkewVal> [<LdevName> [<LdevName>...]]
+
+        set domino <State>  [<LdevName> [<LdevName>...]]
+
+        set mode <ModeVal> [skew <SkewVal>]
+            [<LdevName> [<LdevName>...]] [-consistent]
+
+        set nr_if_invalid <State> [<LdevName> [<LdevName>...]]
+
+Device group operations specific to SRDF/A
+
+     symrdf -g <DgName> [-v | -noecho] [-force] [-symforce]
+          [-bypass] [-noprompt] [-i <Interval>] [-c <Count>]
+          [-hop2 | -bcv [-hop2] | -all | -rbcv | -brbcv]
+          [-rdfg <GrpNum>] [-star]
+
+        disable
+
+        enable
+
+        failover [-immediate] [-establish | -restore [-remote]]
+
+        half_movepair -new_rdfg <GrpNum> [-cons_exempt]
+
+        movepair -new_rdfg <GrpNum> [-cons_exempt]
+
+        split    [-immediate]
+
+        suspend  [-immediate | -cons_exempt]
+
+        activate  <-rdfa_dse |
+                -rdfa_pace | -rdfa_wpace | -rdfa_devpace |
+                -rdfa_wpace_exempt [<LdevName> [LdevName>...]]>
+
+        deactivate <-rdfa_dse |
+                -rdfa_pace | -rdfa_wpace | -rdfa_devpace |
+                -rdfa_wpace_exempt [<LdevName> [LdevName>...]]>
+
+     symrdf -g <DgName>
+          [-hop2 | -bcv [-hop2] | -rbcv | -brbcv | -all]
+          [-i <Interval>] [-c <Count>] [-rdfg <GrpNum>]
+
+        checkpoint
+
+Device group operations specific to RDF/Metro configuration
+
+     symrdf -g <DgName> [-v | -noecho] [-force] [-symforce]
+          [-bypass] [-noprompt] [-i <Interval>] [-c <Count>]
+          [-rdfg <GrpNum>]
+
+        deletepair
+
+        establish [-full] [-use_bias]
+
+        half_deletepair
+
+        half_swap
+
+        query [-summary]
+
+        restore  [-full] [-use_bias]
+
+        set bias <R1 | R2>
+
+        suspend  [-bias <R1 | R2 >]
+
+        verify [-summary]
+          [-enabled | -activeactive | -activebias | -suspended |
+           -syncinprog | -partitioned |
+           -valid]
+
+Composite Groups
+
+     symrdf -cg <CgName> [-v | -noecho] [-force] [-symforce]
+          [-bypass] [-noprompt] [-i <Interval>] [-c <Count>]
+          [-sid <SymmID> |
+           -rdfg <SymmID:GrpNum <,GrpNum,...>> | all [,...] |
+            name:<RdfGroupName>[,<RdfGroupName>,...]]
+          [-hop2 | -bcv [-hop2] | -rbcv | -brbcv] [-star]
+
+        deletepair
+
+        establish  [-full] [<LdevName> [<LdevName>...]]
+
+        failback   [-remote] [-rp] [<LdevName> [<LdevName>...]]
+
+        failover   [<LdevName> [<LdevName>...]]
+                   [-establish | -restore [-remote]]
+
+        half_deletepair
+
+        half_swap
+
+        merge     [-rp] [<LdevName> [<LdevName>...]]
+
+        msc_cleanup
+
+        restore  [-remote] [-rp] [-full]
+                 [<LdevName> [<LdevName>...]]
+
+        resume   [-remote] [-rp] [<LdevName> [<LdevName>...]]
+
+        split   [<LdevName> [<LdevName>...]]
+
+        suspend [<LdevName> [<LdevName>...]]
+
+        swap    [-refresh <R1|R2>]
+
+        update    [-remote] [-rp] [-until <InvalidTracks>]
+                   <LdevName ...>
+
+        invalidate <R1|R2> [<LdevName> [<LdevName>...]] [-nowd]
+
+        not_ready  <R1|R2> [<LdevName> [<LdevName>...]]
+
+        ready      <R1|R2> [<LdevName> [<LdevName>...]]
+
+        refresh    <R1|R2> [-rp] [<LdevName> [<LdevName>...]]
+
+        rw_disable   R2    [<LdevName> [<LdevName>...]]
+
+        rw_enable  <R1|R2> [<LdevName> [<LdevName>...]]
+
+        write_disable <R1|R2> [<LdevName> [<LdevName>...]]
+
+     symrdf -cg <CgName> [-offline] [-i <Interval>] [-c <Count>]
+          [-hop2 | -bcv [-hop2] | -rbcv | -brbcv]
+          [-sid <SymmID> |
+           -rdfg <SymmID:GrpNum <,GrpNum,...>> | all [,...] |
+           name:<RdfGroupName>[,<RdfGroupName>,...]]
+
+        query  [-detail | -summary] [<LdevName> [<LdevName>...]]
+
+        verify [-summary]
+          [-enabled | -synchronized | -suspended |
+           -susp_offline | -split | -failedover | -updated |
+           -syncinprog | -updateinprog | -partitioned |
+           -valid | -consistent [-noinvalids] |
+           -cg_consistent |
+           -acp_disk | -acp_wp | -asynchronous |
+           -semisynchronous | -synchronous]
+           [<LdevName> [<LdevName>...]]
+
+     symrdf -cg <CgName> [-v] [-force]
+          [-bypass] [-noprompt] [-i <Interval>] [-c <Count>]
+          [-hop2 | -bcv [-hop2] | -rbcv | -brbcv]
+          [-sid <SymmID> | -rdfg <SymmID:GrpNum <,GrpNum,...>> |
+           name:<RdfGroupName>[,<RdfGroupName>,...]] [-star]
+
+        set acp_skew <SkewVal> [<LdevName> [<LdevName>...]]
+
+        set domino <State> [<LdevName> [<LdevName>...]]
+
+        set mode <ModeVal> [skew <SkewVal>]
+            [<LdevName> [<LdevName>...]]
+
+        set nr_if_invalid <State> [<LdevName> [<LdevName>...]]
+
+Composite group operations specific to SRDF/A
+
+     symrdf -cg <CgName> [-v | -noecho] [-force] [-symforce]
+          [-bypass] [-noprompt] [-i <Interval>] [-c <Count>]
+          [-sid <SymmID> |
+           -rdfg <SymmID:GrpNum <,GrpNum,...>> | all [,...] |
+            name:<RdfGroupName>[,<RdfGroupName>,...]]
+          [-hop2 | -bcv [-hop2] | -rbcv | -brbcv] [-star]
+
+        failover [-immediate] [-establish | -restore [-remote]]
+
+        split    [-immediate]
+
+        suspend  [-immediate | -cons_exempt]
+
+        activate <-rdfa_dse |
+                -rdfa_pace | -rdfa_wpace | -rdfa_devpace |
+                -rdfa_wpace_exempt [<LdevName> [LdevName>...]]>
+
+        deactivate  <-rdfa_dse |
+                -rdfa_pace | -rdfa_wpace | -rdfa_devpace |
+                -rdfa_wpace_exempt [<LdevName> [LdevName>...]]>
+
+     symrdf -cg <CgName> [-i <Interval>] [-c <Count>]
+          [-hop2]
+          [-rdfg name:RdfGroupName]
+
+        checkpoint
+
+Composite group operations specific to RDF/Metro configuration
+
+     symrdf -cg <CgName> [-v | -noecho] [-force] [-symforce]
+          [-bypass] [-noprompt] [-i <Interval>] [-c <Count>]
+          [-sid <SymmID> |
+           -rdfg <SymmID:GrpNum> | all |
+            name:<RdfGroupName>]
+
+        deletepair
+
+        establish [-full] [-use_bias]
+
+        half_deletepair
+
+        half_swap
+
+        query [-summary]
+
+        restore  [-full] [-use_bias]
+
+        set bias <R1 | R2>
+
+        suspend  [-bias <R1 | R2 >]
+
+        verify [-summary]
+          [-enabled | -activeactive | -activebias | -suspended |
+           -syncinprog | -partitioned |
+           -valid]
+
+Storage Groups
+
+     symrdf -sg <SgName> -sid <SymmID> -rdfg <GrpNum>
+          [-bypass] [-noprompt] [-i <Interval>] [-c <Count>]
+          [-v | -noecho] [-force] [-symforce] [-star]
+          [-hop2]
+
+        createpair -type <R1|R2> -remote_sg <SgName>
+          <-invalidate <R1|R2> | -establish | -restore [-rp] |
+           -format [-establish]>
+          [-hop2_rdfg <GrpNum>]
+          [-rdf_mode <sync | acp_wp | acp_disk>]
+          [-remote] [-nowd]
+
+        deletepair
+
+        establish [-full]
+
+        failback  [-remote] [-rp]
+
+        failover [-establish | -restore [-remote]]
+
+        half_deletepair
+
+        half_movepair -new_rdfg <GrpNum>
+
+        half_swap
+
+        merge [-rp]
+
+        movepair -new_rdfg <GrpNum>
+
+        restore  [-remote] [-rp] [-full]
+
+        resume  [-remote] [-rp]
+
+        split
+
+        suspend
+
+        swap [-refresh <R1|R2>]
+
+        update [-remote] [-rp] [-until <InvalidTracks>]
+
+        invalidate    <R1|R2> [-nowd]
+
+        not_ready     <R1|R2>
+
+        ready         <R1|R2>
+
+        refresh       <R1|R2> [-rp]
+
+        rw_disable     R2
+
+        rw_enable     <R1|R2>
+
+        write_disable <R1|R2>
+
+     symrdf -sg <SgName> -sid <SymmID> -rdfg <GrpNum>
+          [-offline] [-i <Interval>] [-c <Count>]
+          [-hop2]
+
+        query [-summary]
+
+        verify [-summary]
+          [-enabled | -synchronized | -suspended |
+           -susp_offline | -split | -failedover | -updated |
+           -syncinprog | -updateinprog | -partitioned |
+           -valid |
+           -acp_disk | -acp_wp |
+           -synchronous]
+
+     symrdf -sg <SgName> -sid <SymmID> -rdfg <GrpNum>
+           [-force] [-v] [-bypass] [-noprompt]
+           [-i <Interval>] [-c <Count>] [-star]
+           [-hop2]
+
+        set acp_skew <SkewVal>
+
+        set domino <State>
+
+        set mode <ModeVal> [skew <SkewVal>] [-consistent]
+
+        set nr_if_invalid <State>
+
+Storage group operations specific to SRDF/A
+
+     symrdf -sg <SgName> -sid <SymmID> -rdfg <GrpNum>
+          [-bypass] [-noprompt] [-i <Interval>] [-c <Count>]
+          [-v | -noecho] [-force] [-symforce] [-star]
+          [-hop2]
+
+        createpair -type <R1|R2> -remote_sg <SgName>
+          <-invalidate <R1|R2> | -establish | -restore [-rp] |
+           -format [-establish]>
+          [-hop2_rdfg <GrpNum>]
+          [-rdf_mode <async>]
+          [-remote] [-cons_exempt] [-nowd]
+
+        disable
+
+        enable
+
+        failover [-immediate] [-establish | -restore [-remote]]
+
+        half_movepair -new_rdfg <GrpNum> [-cons_exempt]
+
+        movepair -new_rdfg <GrpNum> [-cons_exempt]
+
+        split    [-immediate]
+
+        suspend  [-immediate | -cons_exempt]
+
+        activate   <-rdfa_dse |
+                    -rdfa_pace | -rdfa_wpace | -rdfa_devpace |
+                    -rdfa_wpace_exempt>
+
+        deactivate <-rdfa_dse |
+                    -rdfa_pace | -rdfa_wpace | -rdfa_devpace |
+                    -rdfa_wpace_exempt>
+
+     symrdf -sg <SgName> -sid <SymmID> -rdfg <GrpNum>
+          [-offline] [-i <Interval>] [-c <Count>]
+          [-hop2]
+
+        query [-rdfa | -summary]
+
+        verify [-summary]
+          [-enabled | -suspended |
+           -susp_offline | -split | -failedover | -updated |
+           -syncinprog | -updateinprog | -partitioned |
+           -valid | -consistent [-noinvalids] |
+           -asynchronous]
+
+     symrdf -sg <SgName> -sid <SymmID> -rdfg <GrpNum>
+          [-i <Interval>] [-c <Count>]
+          [-hop2]
+
+        checkpoint
+
+Storage group operations specific to RDF/Metro configuration
+
+     symrdf -sg <SgName> -sid <SymmID> -rdfg <GrpNum>
+          [-bypass] [-noprompt] [-i <Interval>] [-c <Count>]
+          [-v | -noecho] [-force] [-symforce]
+
+        createpair -type <R1|R2> -remote_sg <SgName>
+          -rdf_metro
+          <-invalidate <R1|R2> |
+          <<-establish | -restore> [-use_bias]>>
+
+        createpair -remote_sg <SgName> -rdf_metro -format
+
+        deletepair
+
+        establish [-full] [-use_bias]
+
+        half_deletepair
+
+        half_swap
+
+        query [-summary]
+
+        restore  [-full] [-use_bias]
+
+        set bias <R1 | R2>
+
+        suspend  [-bias <R1 | R2 >]
+
+        verify [-summary]
+          [-enabled | -activeactive | -activebias | -suspended |
+           -syncinprog | -partitioned |
+           -valid]
+
+Device Files
+
+     symrdf -file <Filename> -sid <SymmID> -rdfg <GrpNum>
+          [-bypass] [-noprompt] [-i <Interval>] [-c <Count>]
+          [-v | -noecho] [-force] [-symforce] [-star]
+
+        createpair -type <R1|R2>
+          <-invalidate <R1|R2> | -establish | -restore [-rp] |
+           -format [-establish]>
+          [-rdf_mode <sync|semi|acp_wp|acp_disk|async>]
+          [-g <NewDg>] [-remote] [-nowd]
+
+        deletepair
+
+        establish [-full]
+
+        failback  [-remote] [-rp]
+
+        failover [-establish | -restore [-remote]]
+
+        half_deletepair
+
+        half_movepair -new_rdfg <GrpNum>
+
+        half_swap
+
+        merge [-rp]
+
+        movepair -new_rdfg <GrpNum>
+
+        restore  [-remote] [-rp] [-full]
+
+        resume  [-remote] [-rp]
+
+        split
+
+        suspend
+
+        swap [-refresh <R1|R2>]
+
+        update [-remote] [-rp] [-until <InvalidTracks>]
+
+        invalidate    <R1|R2> [-nowd]
+
+        not_ready     <R1|R2>
+
+        ready         <R1|R2>
+
+        refresh       <R1|R2> [-rp]
+
+        rw_disable     R2
+
+        rw_enable     <R1|R2>
+
+        write_disable <R1|R2>
+
+     symrdf -file <Filename> -sid <SymmID> -rdfg <GrpNum>
+          [-offline] [-i <Interval>] [-c <Count>]
+
+        query [-rdfa | -summary]
+
+        verify [-summary]
+          [-enabled | -synchronized | -suspended |
+           -susp_offline | -split | -failedover | -updated |
+           -syncinprog | -updateinprog | -partitioned |
+           -valid | -consistent [-noinvalids] |
+           -acp_disk | -acp_wp | -asynchronous |
+           -semisynchronous | -synchronous]
+
+     symrdf -file <Filename> -sid <SymmID> -rdfg <GrpNum>
+           [-force] [-v] [-bypass] [-noprompt]
+           [-i <Interval>] [-c <Count>] [-star]
+
+        set acp_skew <SkewVal>
+
+        set domino <State>
+
+        set mode <ModeVal> [skew <SkewVal>] [-consistent]
+
+        set nr_if_invalid <State>
+
+Device File operations specific to SRDF/A
+
+     symrdf -file <Filename> -sid <SymmID> -rdfg <GrpNum>
+          [-bypass] [-noprompt] [-i <Interval>] [-c <Count>]
+          [-v | -noecho] [-force] [-symforce] [-star]
+
+        createpair -type <R1|R2>
+          <-invalidate <R1|R2> | -establish | -restore [-rp] |
+           -format [-establish]>
+          [-rdf_mode <async>]
+          [-g <NewDg>] [-remote] [-cons_exempt] [-nowd]
+
+        disable
+
+        enable
+
+        failover [-immediate] [-establish | -restore [-remote]]
+
+        half_movepair -new_rdfg <GrpNum> [-cons_exempt]
+
+        movepair -new_rdfg <GrpNum> [-cons_exempt]
+
+        split    [-immediate]
+
+        suspend  [-immediate | -cons_exempt]
+
+        activate   <-rdfa_dse |
+                    -rdfa_pace | -rdfa_wpace | -rdfa_devpace |
+                    -rdfa_wpace_exempt>
+
+        deactivate <-rdfa_dse |
+                    -rdfa_pace | -rdfa_wpace | -rdfa_devpace |
+                    -rdfa_wpace_exempt>
+
+     symrdf -file <Filename> -sid <SymmID> -rdfg <GrpNum>
+          [-i <Interval>] [-c <Count>]
+
+        checkpoint
+
+     symrdf -file <Filename> -sid <SymmID> -rdfg <GrpNum>
+          [-noprompt] [-i <Interval>] [-c <Count>]
+          [-v | -noecho] [-force]
+
+        migrate <-setup |
+                 -replace <R1 -new_rdfg <GrpNum> | R2>>
+                 <-config <PairConfigType>>
+
+Device File operations specific to RDF/Metro configuration
+
+     symrdf -file <Filename> -sid <SymmID> -rdfg <GrpNum>
+          [-bypass] [-noprompt] [-i <Interval>] [-c <Count>]
+          [-v | -noecho] [-force] [-symforce]
+
+        createpair -type <R1|R2> -rdf_metro
+          <-invalidate <R1|R2> |
+          <<-establish | -restore> [-use_bias]>>
+          [-g <NewDg>]
+
+        createpair -rdf_metro -format [-g <NewDg>]
+
+        deletepair
+
+        establish [-full] [-use_bias]
+
+        half_deletepair
+
+        half_swap
+
+        query [-summary]
+
+        restore  [-full] [-use_bias]
+
+        set bias <R1 | R2>
+
+        suspend  [-bias <R1 | R2 >]
+
+        verify [-summary]
+          [-enabled | -activeactive | -activebias | -suspended |
+           -syncinprog | -partitioned |
+           -valid]
+
+Dynamic Groups
+
+     symrdf addgrp -label <GrpLabel> -rdfg <GrpNum>
+          -sid <SymmID>
+          -dir <Dir[:<Port>,...][,Dir[:<Port>,...][,...]>
+          -remote_rdfg <GrpNum> -remote_sid <SymmID>
+          -remote_dir <Dir[:<Port>,...][,Dir[:<Port>,...][,...]>
+          [-noprompt] [-i <Interval>] [-c <Count>]
+          [[-fibre] | [-gige] | [-farpoint]]
+          [-link_domino] [-remote_link_domino]
+          [-auto_link_recovery] [-remote_auto_link_recovery]
+          [-link_limbo <Secs>] [-rem_link_limbo <Secs>]
+          [-witness]
+
+     symrdf modifygrp <-add | -remove>
+          <-rdfg <GrpNum> | -label <GrpLabel>>
+          -sid <SymmID>
+          [-dir <Dir[:<Port>,...][,Dir[:<Port>,...][,...]>]
+          [-remote_dir <Dir[:<Port>,...][,Dir[:<Port>,...]
+           [,...]>]
+          [-noprompt] [-i <Interval>] [-c <Count>] [-star]
+          [-witness]
+
+     symrdf removegrp -sid <SymmID>
+          <-rdfg <GrpNum> | -label <GrpLabel>>
+          [-noprompt] [-i <Interval>] [-c <Count>] [-star]
+          [-symforce]
+          [-witness]
+
+ARGUMENTS
+
+     activate       Activates the SRDF/A DSE or SRDF/A write
+                    pacing feature.
+
+     addgrp         Creates a dynamic SRDF group.
+
+     checkpoint     Returns checkpoint complete status when
+                    the data in the current cycle is committed
+                    to the R2 side.
+
+                    Valid only for SRDF/A-capable devices
+                    that are participating in an active SRDF/A
+                    session. All the supplied devices must
+                    be in the same SRDF/A session.
+
+     createpair     Creates dynamic SRDF pairs based on devices
+                    specified in a device file.
+                    The Symmetrix ID specified is the
+                    R1 side by default, but can be the R2
+                    side if the -R2 option is used.
+
+     deactivate     Deactivates the SRDF/A DSE or SRDF/A
+                    write pacing feature.
+
+     deletepair     Deletes dynamic SRDF pairing in the
+                    specified device group.
+
+     disable        Disables consistency protection for
+                    SRDF/A-capable devices.
+
+     enable         Enables consistency protection for
+                    SRDF/A-capable devices.
+
+     establish      Resumes remote mirroring and initiates a
+                    data copy from the source (R1) side to the
+                    target (R2) side.
+
+                    Depending on whether the operation
+                    is full or incremental, all or only the
+                    changed tracks are copied to the target
+                    (R2) side.
+
+                    Write disables the target devices to
+                    their local hosts. Subsequently, for
+                    each SRDF pair, invalidates all or the
+                    required tracks for the target (R2) side.
+                    Finally, a full data copy is started from
+                    the source (R1) side to target (R2) side.
+
+                    For this action to execute, the standard
+                    SRDF devices in the group must be split.
+
+     failback       Switches data processing back to the
+                    source (R1) side.
+
+                    If the target (R2) is operational, write
+                    disables the devices on the target side
+                    to their local hosts, and resumes I/O
+                    traffic on the SRDF links. Then it write
+                    enables the devices on the source (R1)
+                    side to their local hosts.
+
+     failover       Switches data processing from the source
+                    (R1) to the target (R2) side.
+
+                    If the source (R1) is operational, suspends
+                    I/O traffic on the SRDF links and write
+                    disables the devices on the source (R1)
+                    side to their local hosts. Then, it
+                    suspends traffic on the SRDF links, write
+                    enables the devices on the target side
+                    to their local hosts.
+
+     half_deletepair
+                    Deletes one-half of the designated dynamic
+                    SRDF pair.
+
+     half_movepair  Moves one side of the dynamic SRDF pair
+                    from one group to another group.
+
+     half_swap      Swaps the SRDF personality of one-half of
+                    the designated dynamic SRDF pair. Source R1
+                    devices become target R2 devices,
+                    and target R2 devices become source
+                    R1 devices.
+
+     invalidate     Invalidates the source (R1) device(s) or
+                    the target (R2) device(s) so that a full
+                    copy can be initiated from the remote
+                    mirror.
+
+     label          Modifies the label of an existing dynamic
+                    SRDF group.
+
+     list           Lists all SRDF devices.
+
+     merge          Merges the device track tables of the
+                    source (R1) side and the target (R2) side
+                    for one or all devices in a device group.
+
+     migrate        Migrates an existing R1 or R2 device
+                    to a new device in a new Symmetrix array.
+
+     modifygrp      Modifies an existing dynamic SRDF group.
+
+     movepair       Moves both sides of a dynamic SRDF pair
+                    from one group to another group.
+
+     msc_cleanup    Initiates an MSC cleanup operation.
+
+     not_ready      Sets the source (R1) devices or
+                    the target (R2) devices to be SRDF Not
+                    Ready to their respective local hosts.
+
+     ping           Pings one or more Symmetrix arrays. By
+                    default, only the remotely-connected
+                    Symmetrix arrays are pinged over SRDF
+                    links. If the -rdf option is specified, an
+                    RDF-configured Symmetrix array
+                    attached locally is pinged over SRDF
+                    links. The default is to ping it locally
+                    over the I/O channel.
+
+                    The ping action returns a unique return
+                    code if all or some of the targeted
+                    Symmetrix arrays were successfully pinged.
+
+     query          Returns information about the state of the
+                    SRDF mirroring for one or all device pairs
+                    in a device group.
+
+     ready          Sets the source (R1) devices or
+                    the target (R2) devices to be SRDF Ready
+                    to their respective local hosts.
+
+     refresh        Marks the source (R1) devices or the
+                    target (R2) devices to refresh from
+                    the remote mirror.
+
+     removegrp      Removes a dynamic SRDF group.
+
+     restore        Resumes remote mirroring and initiates a
+                    data copy from the target (R2) side to the
+                    source (R1) side. Depending on the
+                    operation, all (full) or only changed
+                    tracks (incremental) are copied to the
+                    source (R1) side.
+
+                    Write disables the target devices to
+                    their local hosts. Subsequently, for
+                    each SRDF pair, invalidates all or the
+                    required tracks for the source (R1) side.
+                    Finally, a data copy is started from the
+                    target (R2) side to the source (R1) side.
+
+                    This action can only be executed if the
+                    standard SRDF devices in the group are
+                    in the Split pair state.
+
+     resume         Resumes I/O traffic on the SRDF links for
+                    the remotely-mirrored pairs in the group.
+
+     rw_disable     Read/write disables the source (R1)
+                    devices or the target (R2) devices to
+                    their local hosts.
+
+     rw_enable      Sets the source (R1) devices or the
+                    target (R2) devices to be read and
+                    write enabled to their local hosts.
+
+     set            Modifies the setting to the specified value.
+
+     split          Stops remote mirroring for the SRDF pairs
+                    in the group. For each SRDF pair, suspends
+                    I/O traffic on the SRDF links and write
+                    enables the target devices to their
+                    local hosts.
+
+                    This action can only be executed if the
+                    remotely-mirrored standard devices in
+                    the group are synchronized.
+
+     suspend        Suspends I/O traffic on the SRDF links for
+                    the remotely mirrored pairs in the
+                    group.
+
+     swap           Swaps the SRDF personality of the
+                    designated SRDF devices. Source R1
+                    devices become target R2 devices,
+                    and target R2 devices become source
+                    R1 devices.
+
+     update         Starts an update of the source (R1) side
+                    after a failover, and while the target
+                    (R2) side may still be operational to its
+                    local hosts.
+
+     verify         Verifies whether one SRDF device pair or
+                    all SRDF device pairs in a device group or
+                    device file are in specific pair state,
+                    SRDF mode, or are enabled.
+
+                    The verify action returns a unique
+                    return code if the verify criteria are not
+                    met.
+
+     write_disable  Write disables the source (R1) devices or
+                    the target (R2) devices to their
+                    local hosts.
+
+KEYWORDS
+
+     acp_skew       Modifies the value of the skew factor for
+                    the set adaptive copy mode.
+
+     bias           Sets the bias to the R1 or R2 device. The
+                    device that has the bias set, will be
+                    exported as the R1.
+
+                    When the RDF link becomes Not Ready (NR),
+                    the bias device will be made
+                    accessible to the host and the
+                    non-bias device will be made not
+                    accessible to the host.
+
+                    This action can only be executed if the
+                    SRDF devices in the group are
+                    in the Active RDF mode.
+
+     dev            Lists all SRDF devices that are configured
+                    on the Symmetrix arrays attached to this
+                    host. This is the default with the list
+                    command.
+
+     domino         Sets the domino mode for one or more SRDF
+                    pairs in a device group to enabled
+                    or disabled. Acceptable values are
+                    on (enabled) or off (disabled).
+
+     mode           Sets the SRDF mode for one or more SRDF
+                    pairs in a device group to a <ModeVal>
+                    of synchronous (sync), semi-synchronous
+                    (semi), asynchronous (async), adaptive copy
+                    disk mode (acp_disk), or adaptive copy
+                    write pending mode (acp_wp), or it turns
+                    off the adaptive copy mode (acp_off).
+
+     nr_if_invalid  Identifies whether the R2 devices in the
+                    devices pairs are marked as Not Ready
+                    due to invalid tracks. Acceptable values
+                    are on (enabled) or off (disabled).
+
+     pd             Lists all SRDF devices visible to this host.
+
+     rdfa           Sets the SRDF/A attributes.
+
+     rdfa_dse       Sets the SRDF/A data set extension
+                    attributes.
+
+     rdfa_pace      Sets the SRDF/A pace attributes.
+
+     rdfg           Sets the SRDF/A group attributes.
+
+OPTIONS
+
+    -acp_disk       Verifies whether the SRDF device pairs are
+                    operating in adaptive copy disk mode.
+
+    -acp_wp         Verifies whether the SRDF device pairs are
+                    operating in adaptive copy write pending
+                    mode.
+
+    -activeactive   Verifies whether the SRDF device pairs are
+                    in the ActiveActive RDF pair state.
+
+    -activebias     Verifies whether the SRDF device pairs are
+                    in the ActiveBias RDF pair state.
+
+     -add           Adds supporting SRDF directors to a dynamic
+                    SRDF group.
+
+     -all           Lists all SRDF mirrors of the selected
+                    devices. Used with symrdf list.
+
+                    When performing an SRDF control or set
+                    operation, it targets the SRDF action at
+                    all devices in the device group: Standard
+                    SRDF devices and locally-attached BCV SRDF
+                    devices.
+
+                    This option is only supported for list
+                    and device group operations.
+
+     -asynchronous  Verifies whether the SRDF device pairs are
+                    operating in asynchronous SRDF mode.
+
+     -as400_pool    Specifies a DSE pool name containing SAVE
+                    devices with an AS400 emulation.If no
+                    argument is provided, the currently
+                    associated as400 pool is removed from the
+                    SRDF group.
+
+     -auto_link_recovery
+                    Specifies whether the auto_link_recovery
+                    feature is locally enabled or disabled.
+                    Acceptable values are on (enabled) or off
+                    (disabled).
+
+     -autolink_recovery
+                    Specifies whether the autolink_recovery
+                    feature is locally enabled or disabled, or
+                    if enabled on both sides if -both_sides is
+                    specified. Acceptable values are on
+                    (enabled) or off (disabled).
+
+     -autostart     Specifies whether SRDF/A DSE is
+                    automatically activated when an SRDF/A
+                    session is on (Enabled) or off (Disabled)
+                    for the SRDF group. Acceptable values are
+                    on (Enabled) or off (Disabled).
+
+     -bcv           Targets the SRDF action at the device
+                    group's locally-associated BCV devices
+                    that are configured as SRDF BCV devices.
+
+     -bias          Sets the bias to the R1 or R2 device. The
+                    device that has the bias set, will be
+                    exported as the R1.
+
+                    When the RDF link becomes Not Ready (NR),
+                    the bias device will be made
+                    accessible to the host and the
+                    non-bias device will be made inaccessible
+                    to the host.
+
+                    This option can only be used when the
+                    SRDF devices in the group are
+                    in the Active RDF mode.
+
+     -both          Lists all SRDF devices that are RDF1 or
+                    RDF2 capable, when used with -dynamic.
+
+     -both_sides    Targets the SRDF control at both sides of
+                    the SRDF link.
+
+     -brbcv         Targets the SRDF action at the device
+                    group's remotely-associated SRDF BCV
+                    devices that can be BCV paired with the
+                    remote mirrors of the locally-associated
+                    SRDF BCV devices.
+
+     -bypass        Bypasses any existing Symmetrix exclusive
+                    locks during an SRDF operation.
+                    WARNING: Only use this flag if you are
+                    certain no other SRDF operation is in
+                    progress at the local and/or remote
+                    Symmetrix arrays.
+
+     -c             Specifies the number (count) of times to
+                    repeat the operation, displaying results
+                    appropriate to the operation at each
+                    iteration. Used with list, ping,
+                    query, and verify operations.
+
+                    Specifies the number (count) of times to
+                    attempt to acquire an exclusive lock on the
+                    Symmetrix host database, or on the local
+                    and/or remote Symmetrix arrays.
+                    For SRDF control and set operations.
+
+                    The time to wait between operation
+                    iterations or between attempts to acquire
+                    a needed lock is specified by -i (interval).
+
+                    If neither -c nor -i is specified,
+                    these operations fail if unable to
+                    acquire a requested lock.
+
+                    If -c is not specified and -i is
+                    specified, the program loops continuously,
+                    repeating the specified list, ping,
+                    query, or verify operation, or until the
+                    specified SRDF control or set operation has
+                    acquired the locks it needs and can start.
+
+     -cascade       Lists cascaded SRDF devices (RDF21) and
+                    SRDF devices paired with RDF21 devices.
+                    When used with -R1, lists RDF1 devices
+                    paired with RDF21 devices. When used
+                    with -R2, lists RDF2 devices paired
+                    with RDF21 devices.
+
+     -cg            Specifies a composite group name.
+
+     -cg_consistent Verifies that CG is RDF consistent.
+
+     -ckd3380_pool
+                    Specifies a DSE pool name containing SAVE
+                    devices with a CKD3380 emulation. If no
+                    argument is provided the currently
+                    associated ckd3380 pool is removed
+                    from the SRDF group.
+
+     -ckd3390_pool
+                    Specifies a DSE pool name containing SAVe
+                    devices with CKD3390 emulation. If no
+                    argument is provided, the currently
+                    associated ckd3390 pool is removed
+                    from the SRDF group.
+
+     -concurrent    Lists concurrent SRDF devices (RDF11, RDF22)
+                    and SRDF devices paired with a concurrent
+                    SRDF device. When used with -R1, lists RDF11
+                    devices and SRDF devices paired with a
+                    concurrent SRDF device. When used with -R2,
+                    lists RDF22 devices and RDF2 devices paired
+                    with a concurrent device.
+
+     -config        Specifies the existing device pair
+                    configuration type. The only valid value
+                    is pair, which indicates the device pair is
+                    an R1-R2 pair that is not part of an SRDF
+                    concurrent or cascaded configuration.
+
+     -consistency   Displays the SRDF consistency state when
+                    listing SRDF devices.
+
+     -consistent    Verifies that the SRDF device pairs for a
+                    single SRDF group are in the R2 consistent
+                    SRDF pair state, when used with the verify
+                    command. If the -noinvalids option is
+                    specified, it also verifies the SRDF device
+                    pairs do not have invalid tracks on the
+                    R1 and R2 sides.
+
+                    When used with set mode sync, transitions
+                    from async to sync mode.
+
+     -cons_exempt   Allows devices to be added, removed, or
+                    suspended without affecting the state of the
+                    SRDF/A session or requiring that other
+                    devices in the session be suspended.
+                    Used for an SRDF group supporting an active
+                    SRDF/A session.
+
+                    When used with list operations, lists
+                    devices that are consistency exempt or that
+                    are paired with devices that are consistency
+                    exempt.
+
+     -cycle_time    The minimum time to wait before attempting
+                    an SRDF/A cycle switch.
+
+     -delay         The maximum host I/O delay that the SRDF/A
+                    write pacing feature will cause. Valid range
+                    of values for wpace_delay is between 1 and
+                    1000000 micro-seconds.
+
+     -detail        Displays detailed information for a CG,
+                    with information specific to the enable
+                    mode.
+
+     -dir           Lists the local Symmetrix directors
+                    (separated by commas), such as,
+                    1a, 1b, and so on.
+
+     -diskless_rdf  Lists diskless SRDF devices as well as
+                    devices paired with diskless SRDF devices.
+                    When used with -R1, lists RDF1 devices that
+                    are either diskless or that are paired with
+                    a diskless device. When used with -R2,
+                    lists RDF2 devices that are either diskless
+                    or are paired with a diskless device. When
+                    used with -R21, lists RDF21 devices that
+                    are either diskless or that are paired with
+                    a diskless device.
+
+     -domino        Specifies whether link domino is locally
+                    enabled or disabled, or enabled on both
+                    sides of an SRDF link when -both_sides
+                    is specified. Acceptable values are on
+                    (enabled) or off (disabled).
+
+     -dp_autostart  Specifies whether the SRDF/A device-level
+                    pacing feature is automatically on (Enabled)
+                    or off (Disabled) when an SRDF/A session is
+                    activated for the RDF group. Acceptable
+                    values are on (enabled) or off (disabled).
+
+     -dup_pair      Lists devices whose partner is of the same
+                    SRDF personality.
+
+     -dynamic       Lists dynamic SRDF devices only. When used
+                    with -R1, lists RDF1 devices that are
+                    dynamic. When used with  -R2, lists RDF2
+                    devices that are also dynamic. When used
+                    with -both, lists SRDF devices that are RDF1
+                    and RDF2 capable.
+
+     -enabled       Verifies that the SRDF device pairs are
+                    in the SRDF consistency state.
+
+     -establish     Begins a device copy. When used with
+                    createpair, a full copy from the source
+                    to the target is started, synchronizing
+                    the dynamic SRDF pairs in the device file.
+                    When used with failover, the dynamic SRDF
+                    device pairs swap personality and an
+                    incremental establish is initiated.
+                    When used with -format option, the dynamic
+                    SRDF pair(s) will be made read/write on the
+                    RDF link without synchronization of the
+                    source and target after all tracks are
+                    cleared on what will become the R1 and R2
+                    side.
+
+     -failedover    Verifies the SRDF device pairs are
+                    in the Failedover pair state.
+
+     -farpoint      Uses the FarPoint communication protocol.
+
+     -fba_pool      Specifies a DSE pool name containing SAVE
+                    devices with an FBA emulation. If no
+                    argument is provided, the currently
+                    associated FBA pool is removed from
+                    the SRDF group.
+
+     -fibre         Uses the Fibre Channel communication
+                    protocol.
+
+     -file          Specifies a device file for SRDF operations.
+                    The device file contains device pairs
+                    (SymDevnames) listing a pair on each line.
+                    R1 devices are listed in the first column
+                    and R2 devices are listed in the second
+                    column. When using this option, specify an
+                    RDF group to which all devices in the first
+                    column belong.
+
+                    For an R1 migration, you create a device
+                    file to pair SRDF devices with the new
+                    non-SRDF devices. This pairing is used to
+                    temporarily transfer data from the existing
+                    R1 devices to the devices that will
+                    eventually replace them in an SRDF pair. The
+                    first column of the device file contains the
+                    existing R1 devices paired with the new
+                    non-SRDF devices in the second column.
+
+                    For an R2 migration, you create a device
+                    file to pair SRDF devices with the new
+                    non-SRDF devices, which will eventually
+                    replace the existing R2 devices. The first
+                    column of the device file contains the R1
+                    devices that are paired with the new
+                    devices in the second column when migration
+                    is complete.
+
+     -force         Attempts to force the operation even though
+                    one or more devices in the device group may
+                    not be in the normal, expected SRDF state or
+                    SRDF mode for that operation.
+
+     -format        When used with createpair, no data
+                    synchronization is done between source
+                    and target dynamic SRDF pairs in the device
+                    file after all tracks are cleared on what
+                    will become the R1 and R2 side.
+
+     -full          Requests a full establish or restore
+                    operation. By default, if the -full option
+                    is not specified, an incremental
+                    establish or restore is attempted.
+
+     -g             Specifies the device group name. For
+                    createpair, the device group is created
+                    with the devices in the device file.
+
+     -gige          Uses the Gigabyte Ethernet protocol.
+
+     -h             Provides brief online help information.
+
+     -half_pair     Lists devices whose partner is not an SRDF
+                    device.
+
+     -hop2          Targets the SRDF action at the group's
+                    second-hop devices in a cascaded SRDF
+                    relationship. For example, in an RDF1
+                    group, the action targets the R21->R2
+                    pair of the R1->R21->R2 relationship.
+
+     -hop2_rdfg     Specifies the SRDF group number for the
+                    second-hop. This can only be used
+                    when issuing a createpair -hop2 with
+                    an SG.
+
+     -hwcomp        Specifies whether the hardware compression
+                    feature is on (enabled) or off (disabled).
+                    Compression minimizes the amount of data to
+                    be transmitted over an SRDF link.
+                    Acceptable values are on (enabled) or off
+                    (disabled).
+
+     -i             Specifies the interval, in seconds, to
+                    wait, either between successive iterations
+                    of a list, ping, query, or verify
+                    operation, or between attempts to acquire
+                    an exclusive lock on the Symmetrix host
+                    database or on the local and/or remote
+                    Symmetrix arrays for SRDF control and set
+                    operations.
+
+                    The default interval is 30 seconds.
+                    The minimum interval is 5 seconds.
+                    For passive actions the minimum interval is
+                    15 seconds. Passive actions are actions that
+                    do not acquire an exclusive lock.
+
+     -immediate     Applies only to SRDF/A-capable devices.
+                    Causes failover, split, and suspend
+                    commands to drop the SRDF/A session
+                    immediately.
+
+     -invalidate    Marks the source (R1) devices or the
+                    target (R2) devices to invalidate for
+                    a full copy when an SRDF pair is created.
+
+     -label         Specifies a label for a dynamic SRDF group.
+
+     -limbo         Specifies the local link limbo value if
+                    used with the set argument and the remote
+                    link limbo value if used with the
+                    -both_sides option.
+
+                    This option is for advanced users only.
+                    The link limbo range is 0-120 seconds. This
+                    value specifies the length of time for
+                    Enginuity to wait from the point of
+                    link-down detection before actually
+                    updating the link status as down.
+                    If the link status is still sensed as
+                    Not Ready after the link limbo time expires,
+                    devices are then marked Not Ready to the
+                    link. The default time is 10 seconds.
+
+     -link_domino   Specifies whether the link domino feature
+                    is enabled or disabled. Acceptable values
+                    are on (enabled) or off (disabled).
+
+     -link_limbo    Specifies a local link limbo value if used
+                    with the addgrp argument.
+
+                    This option is for advanced users only.
+                    The link limbo range is 0-120 seconds. This
+                    value specifies the length of time for
+                    Enginuity to wait from the point of
+                    link-down detection before actually
+                    updating the link status as down.
+                    If the link status is still sensed as
+                    Not Ready after the link limbo time expires,
+                    devices are then marked Not Ready to the
+                    link. The default time is 10 seconds.
+
+
+     -new_rdfg      Specifies a new group in which to move a
+                    dynamic SRDF pair.
+
+                    When used with the migrate -replace R1
+                    operation, specifies the SRDF group that
+                    connects the new R1 device to the existing
+                    R2 device.
+
+     -nobcv         Lists standard SRDF devices only (excludes
+                    SRDF BCV devices).
+
+     -noecho        Does not echo the progress status of the
+                    SRDF action to stdout.
+
+     -noinvalids    Used with the -consistent option to verify
+                    the SRDF device pairs are in the R2
+                    Consistent pair state, and the device pairs
+                    do not have invalid tracks on the R1 and R2
+                    sides.
+
+     -noprompt      Requests that prompts are not displayed
+                    after the command is entered. The default
+                    is to prompt the user for confirmation.
+
+     -nowd          Bypasses the check to ensure the target of
+                    the operation is not writable by the host.
+
+                    This applies to the source (R1) devices for
+                    the invalidate R1 action and to the target
+                    (R2) devices for the invalidate R2 action.
+
+                    It applies to the R2 devices for all
+                    createpair actions, as well as to the R1
+                    devices for the createpair -invalidate R1
+                    action.
+
+     -offline       Obtains data only from the configuration
+                    database on the host. No connections are
+                    made to any Symmetrix arrays. Available
+                    only for query and list actions.
+
+     -partitioned   Verifies whether the SRDF device pairs are
+                    in the Partitioned pair state.
+
+     -priority      The priority used to determine which SRDF/A
+                    sessions to drop if the cache becomes full.
+                    Valid range of values is 1-64.
+
+     -witness       When used with addgrp it identifies the
+                    RDF group as a witness RDF group.
+
+                    When used with removegrp or modifygrp it
+                    specifies the action is targeted for an RDF
+                    group which is a witness RDF group.
+
+     -R1            Lists the RDF1 (R1) devices only. When
+                    used with -dynamic, lists the dynamic RDF1
+                    devices.
+
+     -R2            Lists the RDF2 (R2) devices only. When
+                    used with -dynamic, lists the dynamic RDF2
+                    devices.
+
+     -R21           Lists the RDF21 (R21) devices only.
+
+     -rbcv          Targets the SRDF action at the device
+                    group's locally-associated SRDF BCV
+                    devices that can be BCV-paired with
+                    the remote mirrors of the standard RDF
+                    devices.
+
+     -rdf           Pings the specified Symmetrix array using
+                    the SRDF links, even though it may be
+                    attached locally to the host.
+
+     -rdf_metro     When used with the createpair action,
+                    indicates the SRDF pairs will be created
+                    in an RDF/Metro configuration.
+
+                    When used with the list action, it will
+                    list devices that are in an
+                    RDF/Metro configuration.
+
+     -rdf_mode      Sets the following SRDF modes for one or
+                    more SRDF pairs when issuing createpair:
+                    Synchronous (sync),
+                    Semi-synchronous (semi),
+                    Asynchronous (async), Adaptive Copy
+                    Disk mode (acp_disk), or Adaptive Copy
+                    Write Pending mode (acp_wp).
+
+     -rdfa          Lists or queries devices that are
+                    SRDF/A-capable.
+
+     -rdfa_devpace  Indicates that the operation affects the
+                    SRDF/A device-level write pacing feature.
+
+     -rdfa_dse      Indicates that the operation affects
+                    the SRDF/A Delta Set Extension (DSE)
+                    feature.
+
+     -rdfa_not_pace_capable
+                    When used with list operations, lists
+                    RDF pairs that cannot be write paced for
+                    any reason other than exemption from
+                    group-level SRDF/A Write Pacing.
+
+     -rdfa_pace     Indicates that the operation affects
+                    both the group-level and the device-level
+                    components of the SRDF/A Write Pacing
+                    feature.
+
+     -rdfa_wpace    Indicates that the operation affects
+                    the SRDF/A group-level Write Pacing
+                    feature.
+
+     -rdfa_wpace_exempt
+                    When used with activate operations,
+                    excludes the specified devices from
+                    SRDF/A group-level Write Pacing.
+
+                    When used with deactivate operations,
+                    clears a previously-set exempt state
+                    so that the specified devices can
+                    participate in SRDF/A group-level
+                    Write Pacing.
+
+                    When used with list operations, lists
+                    devices that are exempt from SRDF/A
+                    group-level Write Pacing.
+
+     -rdfg          Displays the SRDF devices belonging to the
+                    specified Symmetrix RA (SRDF) group number
+                    when used with list operations. When
+                    combined with other list options, displays
+                    devices that match those options within the
+                    specified group.
+
+                    When used with controls, modify, and query,
+                    this option causes the operation to target a
+                    specific SRDF group.
+
+                    When used with -sg createpair -hop2 this
+                    identifies the SRDF group associated with
+                    the SG. The -hop2_rdfg identifies the
+                    SRDF group to be used to create the new
+                    hop2 pair.
+
+                    For the migrate operation, -rdfg
+                    represents the SRDF group used to pair
+                    the existing R1 device to the associated
+                    device in the second column of the file.
+                    When migrating the R1 device, this SRDF group
+                    is temporary.
+
+                    For composite groups, the format is a
+                    comma-separated combination of Symmetrix
+                    IDs and RA group numbers (SID:GRP,SID:GRP),
+                    or a comma-separated list of predefined
+                    names in the form of name:RdfGroupName,
+                    RdfGroupName, and so on.
+
+     -refresh       Marks the source (R1) devices or the
+                    target (R2) devices to refresh from the
+                    remote mirror.
+
+     -remote        Requests a remote data copy flag with
+                    failback, failover, restore, update, and
+                    resume. When the concurrent link is ready,
+                    data is copied to the concurrent
+                    SRDF mirror. These operations require the
+                    remote data copy option, or the concurrent
+                    link to be suspended.
+
+     -remote_auto_link_recovery
+                    Enables auto-link recovery remotely.
+
+     -remote_dir    Specifies a comma-separated list of remote
+                    Symmetrix directors, such as 1a,1b, and so
+                    on.
+
+     -remote_link_domino
+                    Enables link domino remotely.
+
+     -remote_link_limbo
+                    Specifies a remote link limbo value
+                    (range is 0-120 seconds).
+
+                    This option is for advanced users only.
+
+                    This period specifies the length of time for
+                    Enginuity to wait from the point of
+                    remote-link-down detection before actually
+                    updating the remote link status as down. If
+                    the remote link status is still sensed as
+                    Not Ready after the link limbo time expires,
+                    devices are then marked Not Ready to the
+                    remote link. Default time is 10 seconds.
+
+     -remote_rdfg   Specifies the SRDF group number for the
+                    remote Symmetrix array.
+
+     -remote_sg     Specifies the remote storage group name.
+                    When used with createpair -hop2 this
+                    is the remote storage group for the
+                    second-hop.
+
+     -remote_sid    Specifies the remote Symmetrix array
+                    unique ID.
+
+     -remove        Removes supporting RDF directors from a
+                    dynamic SRDF group.
+
+     -replace       Replaces an original R1 or R2 device with a
+                    new device on another Symmetrix array. This
+                    is the second step of the SRDF migrate
+                    procedure.
+
+     -restore       Begins a full copy from the target to the
+                    source, synchronizing the dynamic SRDF
+                    pairs in the device file. When used with
+                    failover, the dynamic SRDF device pairs
+                    swap personality and an incremental restore
+                    is initiated.
+
+     -resv          Lists SRDF devices that have SCSI
+                    reservations.
+
+     -rp            Allows the operation even though one or more
+                    devices are tagged for RecoverPoint. When
+                    used with refresh, only allowed for refresh
+                    R1.
+
+     -semisynchronous
+                    Verifies whether the SRDF device pairs are
+                    operating in a semi-synchronous SRDF mode.
+
+     -setup         Establishes a relationship and starts data
+                    synchronization between an existing R1
+                    device on one Symmetrix array and a new
+                    device on another Symmetrix array. This is
+                    the first step of the SRDF migrate
+                    procedure.
+
+     -sg            Specifies a storage group name.
+
+     -sid           Specifies the unique Symmetrix ID.
+
+                    For file operations, identifies the
+                    Symmetrix ID associated with the devices in
+                    the first column of the file.
+
+     -split         Verifies the SRDF device pairs are in
+                    the Split pair state.
+
+     -star          Specifies the action is targeted for
+                    devices in STAR mode.
+
+     -star_mode     Lists devices currently in STAR mode.
+
+     -star_async_target
+                    Allows the devices in async mode
+                    in an SRDF/Star environment to track changes
+                    between two target SRDF/Star sites.
+
+     -star_sync_target
+                    Allows the devices in sync mode
+                    in a SRDF/Star environment to track changes
+                    between two target SRDF/Star sites.
+
+     -summary       Displays a table showing the number of
+                    device pairs in each SRDF pair state.
+
+                    When used with query operations,
+                    replaces the usual command output.
+
+                    When used with the verify operation,
+                    includes the table with the command output.
+
+                    When used with the -interval and/or -count
+                    options, also displays synchronization rate
+                    and estimated ime to completion for both the
+                    query and verify operations.
+
+     -suspended     Verifies whether the SRDF device pairs
+                    are in the Suspended pair state.
+
+     -susp_offline  Verifies whether the SRDF device pairs
+                    are in the Suspended pair state and
+                    the SRDF link Suspend state is OFFLINE.
+
+     -swcomp        Specifies whether the software compression
+                    feature is enabled or disabled. Compression
+                    minimizes the amount of data to be
+                    transmitted over an SRDF link.  Acceptable
+                    values are on (enabled) or off (disabled).
+
+     -symforce      Requests the Symmetrix array force operation
+                    be executed when normally it is rejected.
+                    Use extreme caution when using this option.
+
+                    When used with removegrp action, removes one
+                    side of a dynamic SRDF group if the other
+                    side is not defined or is not accessible.
+
+                    CAUTION: Use care when applying -symforce,
+                    as data could be lost or corrupted. Use of
+                    this option is not recommended, except in
+                    an emergency.
+
+                    NOTE: To enable -symforce, a parameter
+                    called SYMAPI_ALLOW_RDF_SYMFORCE in the
+                    options file must be set to TRUE.
+
+                    When used with -symforce, a split command
+                    executes on an SRDF pair, even when the pair
+                    is sync in progress or restore in progress.
+                    During the execution of an establish or
+                    restore command, -symforce prohibits the
+                    verification of valid tracks on the device
+                    at the source.
+
+     -synchronized  Verifies whether the SRDF device pairs are
+                    in the Synchronized pair state.
+
+     -synchronous   Verifies whether the SRDF device pairs are
+                    operating in synchronous SRDF mode.
+
+     -syncinprog    Verifies whether the SRDF device pairs are
+                    in the SyncInProg pair state.
+
+     -threshold     When used with rdfa_dse, it specifies the
+                    percentage of the Symmetrix array's write
+                    pending limit. Once the cache usage of all
+                    active SRDF/A groups in the array exceeds
+                    this limit, data tracks for this SRDF group
+                    start to spill over to disks. Acceptable
+                    values are between 20 and 100 integer
+                    values.
+
+                    When used with rdfa_pace, it specifies the
+                    minimum percentage of the system write
+                    pending cache at which the Symmetrix array
+                    starts pacing host write I/Os for this SRDF
+                    group. Valid range of values is between
+                    1 and 99.
+
+     -transmit_idle
+                    If set to on (enabled), provides an extra
+                    level of protection so that the SRDF/A
+                    session does not drop when the SRDF link
+                    cannot transmit data. Acceptable values are
+                    on (enabled) or off (disabled).
+
+     -type          Indicates the SRDF mirror type (R1 or R2)
+                    of the local devices when creating SRDF
+                    device pairs.
+
+     -until         Specifies the number of invalid tracks to
+                    reach on the target side before the update
+                    action stops repeating every time the SRDF
+                    pair becomes updated.
+
+     -updated       Verifies whether the SRDF device pairs
+                    are in the R1 Updated pair state.
+
+     -updateinprog  Verifies whether the SRDF device pairs are
+                    in the R1 UpdInProg RDF pair state.
+
+     -use_bias      Used with createpair -establish/-restore,
+                    establish or restore actions, to indicate
+                    that RDF/Metro configuration will use
+                    bias instead of witness protection.
+
+     -v             Provides a more detailed, verbose output.
+
+     -valid         Verifies whether the SRDF device pairs
+                    are in a valid pair state.
+
+     -wp_autostart  Specifies whether the SRDF/A write pacing
+                    feature is automatically on (enabled) when
+                    an SRDF/A session is activated for the SRDF
+                    group. Acceptable values are on (enabled)
+                    or off (disabled).
+
+PARAMETERS
+
+     acp_disk       Sets the device pairs to
+                    adaptive copy disk mode.
+
+     acp_off        Turns off the adaptive copy mode for
+                    the device pairs.
+
+     acp_wp         Sets the device pairs to
+                    adaptive copy write pending mode.
+
+     all            All SRDF (RA) groups.
+
+     async          Sets the device pairs to asynchronous
+                    mode.
+
+     CgName         The composite group name.
+
+     CycleTime      The minimum time to wait before attempting
+                    an SRDF/A cycle switch.
+
+     DgName         The device group name.
+
+     Dir            Local or remote Symmetrix director.
+
+     DseThreshold   Specifies the percentage of the Symmetrix
+                    array's write pending limit.
+
+     Filename       The device file name.
+
+     GrpLabel       The dynamic SRDF group label.
+
+     GrpNum         The SRDF (RA) group number.
+
+     LdevName       The logical device name of the standard
+                    SRDF device.
+
+     ModeVal        Sets the SRDF mode for one or more SRDF
+                    pairs in a device group. Possible values
+                    are:
+                        sync
+                        semi
+                        acp_disk
+                        acp_wp
+                        acp_off
+                        async
+
+                    Note: The skew <SkewVal> and <LdevName>
+                    cannot be used with the async value. The
+                    -consistent option is only allowed with the
+                    sync value.
+
+     NewDg          Identifies the DG name in which to add the
+                    device pair after the pair is created.
+
+     off            Turns domino mode, hwcomp, swcomp,
+                    auto_link_recovery, transmit_idle,
+                    wp_autostart, dp_autostart,
+                    autostart or nr_if_invalid off.
+
+     on             Turns domino mode, hwcomp, swcomp,
+                    auto_link_recovery, transmit_idle,
+                    wp_autostart, dp_autostart,
+                    autostart or nr_if_invalid on.
+
+     PairConfigType Identifies the pair configuration type
+                    for the migrate action.  Possible values
+                    are:
+                        pair
+
+     PdevName       Hostname for the physical device,
+                    such as /dev/rdsk/c2t0d2s3.
+
+     PoolName       Specifies the name of a collection of SAVE
+                    devices with a particular emulation type to
+                    use for SRDF/A DSE.
+
+     Port           Local or remote Symmetrix director port.
+
+     R1             Operation is targeted at the source
+                    (R1) side.
+
+                    When used with either set bias
+                    or suspend -bias, indicates
+                    the bias will be set on the R1.
+
+     R2             Operation is targeted at the target
+                    (R2) side.
+
+                    When used with either set bias
+                    or suspend -bias, indicates
+                    the bias will be set on the R2.
+
+     RdfGroupName   Logical name associated with the RDF
+                    (RA) group(s).
+
+     Secs           Number of seconds to set for link limbo.
+
+     semi           Sets the device pairs into semi-synchronous
+                    mode.
+
+     SessPriority   The priority used to determine which SRDF/A
+                    sessions to drop if the cache becomes full.
+
+     SgName         The storage group name.
+
+     SkewVal        Sets the skew factor for the adaptive copy
+                    mode. Possible values range from 0 to
+                    65,534 tracks. For devices larger than
+                    2 GB, a value of 65,535 can be specified
+                    to target all the tracks of any given
+                    drive.
+
+     State          Specifies the state for various SRDF set
+                    operations. Possible values are:
+                       on
+                       off
+
+     SymmID         12-character ID that specifies the
+                    Symmetrix array.
+
+     sync           Sets the device pairs into synchronous
+                    mode.
+
+     value          Adaptive copy skew value or link
+                    limbo value.
+
+     WpaceDelay     The maximum host I/O delay that the SRDF/A
+                    write pacing feature will cause.
+
+     WpaceThreshold
+                    The minimum percentage of the system write
+                    pending cache at which the Symmetrix array
+                    will start pacing host write I/Os for this
+                    SRDF group.
+
+
+
