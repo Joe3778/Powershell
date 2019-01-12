@@ -1,0 +1,35 @@
+Symmetrix ID: 000196801696
+
+                               Local Device View                             
+-----------------------------------------------------------------------------
+                     STATUS    MODES                      RDF  S T A T E S   
+Sym   Sym    RDF     --------- -----  R1 Inv   R2 Inv  ----------------------
+Dev   RDev   Typ:G   SA RA LNK MDATE  Tracks   Tracks  Dev RDev Pair         
+----- ----- -------- --------- ----- -------- -------- --- ---- -------------
+
+0002C 00043   R1:1   RW RW NR  A..1.        0  1959521 RW  WD   Suspended     
+0002D 0002A   R1:1   RW RW NR  A..1.        0  1080818 RW  WD   Suspended     
+0002E 00042   R1:2   RW RW RW  A..1.        0        0 RW  WD   SyncInProg    
+0002F 00044   R1:2   RW RW RW  A..1.        0        0 RW  WD   SyncInProg    
+00030 00040   R1:3   RW RW RW  A..1.        0        0 RW  WD   Suspended    
+00031 0002E   R1:3   RW RW RW  A..1.        0        0 RW  WD   Suspended    
+00032 0003F   R1:4   RW RW RW  A..1.        0        0 RW  WD   Consistent    
+00033 0002F   R1:4   RW RW RW  A..1.        0        0 RW  WD   Consistent    
+00034 0003E   R1:8   RW RW RW  A..1.        0        0 RW  WD   Consistent    
+00035 00041   R1:8   RW RW RW  A..1.        0        0 RW  WD   Consistent    
+0004B 0002C   R1:5   RW RW RW  A..1.        0        0 RW  WD   Consistent    
+00052 0004A   R1:1   RW RW NR  A..1.        0  1436764 RW  WD   Suspended     
+00054 0004B   R1:2   RW RW RW  A..1.        0   169433 RW  WD   SyncInProg    
+
+Total                                -------- --------
+  Track(s)                                  0  4646536
+  MB(s)                                   0.0 580817.0
+
+Legend for MODES:
+
+ (M)ode of Operation : A = Async, S = Sync, E = Semi-sync, C = Adaptive Copy
+                     : M = Mixed, T = Active
+ (D)omino            : X = Enabled, . = Disabled
+ (A)daptive Copy     : D = Disk Mode, W = WP Mode, . = ACp off
+ Mirror (T)ype       : 1 = R1, 2 = R2
+ Consistency (E)xempt: X = Enabled, . = Disabled, M = Mixed, - = N/A
