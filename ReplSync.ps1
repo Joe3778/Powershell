@@ -5,9 +5,9 @@
 
 #Run command and store output
 ##The real check
-# $cmdOutput = symrdf list -all | Out-String
+$cmdOutput = symrdf list -all | Out-String
 ##Testing check
-$cmdOutput = type "C:\Users\Joe\Documents\GitHub\Powershell\Sample.out" | Out-String
+#$cmdOutput = type "C:\Users\Joe\Documents\GitHub\Powershell\Sample.out" | Out-String
 
 $cmdOutputSplit = $cmdOutput -split "`n"
 
@@ -52,7 +52,7 @@ $SuspendedGroups
 #$lines = $SuspendedGroups
 $TEST = @{}
 
-# TEST EACH LINE
+# Remove Duplicates
 $UniqueGroups = Foreach ($line in $SuspendedGroups)
 {
  if ($TEST.$line)
@@ -78,13 +78,13 @@ Foreach ($Group in $UniqueGroups)
  $UniqueGroupNum = ($Group | Select-String -Pattern ':\d{1,}').Matches.Value
  $UniqueGroupNum = $UniqueGroupNum -replace '[:]',''
  if ($UniqueGroupNum) {
-	$command = 'symrdf resume -file rdfg$UniqueGroupNum.txt -sid 696 -rdfg $UniqueGroupNum -noprompt'
+	#$command = 'symrdf resume -file rdfg$UniqueGroupNum.txt -sid 696 -rdfg $UniqueGroupNum -noprompt'
 	#$command = 'dir *.*$UniqueGroupNum'
 	#Invoke-Expression $command
 	#Invoke-Expression 'symrdf resume -file rdfg$UniqueGroupNum.txt -sid 696 -rdfg $UniqueGroupNum -noprompt'
 	#$WhatDone += 'symrdf resume -file rdfg$UniqueGroupNum.txt -sid 696 -rdfg $UniqueGroupNum -noprompt' | out-string
-	Invoke-Expression 'dir *.*$UniqueGroupNum'
-	$WhatDone += "dir *.*$UniqueGroupNum" | out-string
+	#Invoke-Expression 'dir *.*$UniqueGroupNum'
+	$WhatDone += "symrdf resume -file rdfg$UniqueGroupNum.txt -sid 696 -rdfg $UniqueGroupNum -noprompt" | out-string
 	#$WhatDone += $command | out-string
 	}
  
@@ -92,31 +92,12 @@ Foreach ($Group in $UniqueGroups)
 $WhatDone
 
 
-#"& '.\Test Document.html'"
-
-
-
-
-
-
-
-#$UniqueGroupsSplit = $UniqueGroups -split "`n"
-
-#$UniqueGroupNum = $UniqueGroupsSplit | Select-String -Pattern '\d+$' -AllMatches | Out-String
-
-#write-host "Should just be numbers:"
-#$UniqueGroupNum
-
-#symrdf resume -file rdfg1.txt -sid 696 -rdfg 1 -noprompt
-
-
-#write-host $SuspendedUniqueGroup
-
 ##Add some text to the body and include the command output
-#$body =@"
-#Here is the sync report for s1vipems01 using 'symrdf list -all'
-#$cmdOutput
-#"@
-#
-##Send-MailMessage command to send the email.
-#Send-MailMessage -From s1vipems01@coop.org -To "Joe Bechler <joe.bechler@coop.org>", "Brad Lones <Brad.Lones@coop.org>", "Jonathan Lee <Jonathan.Lee@coop.org>" -Subject "SYMRDF Results" -Body $body -Smtpserver TMGSMTP.tmg.net
+$body =@"
+Here is the sync report for s1vipems01 using 'symrdf list -all'
+$WhatDone
+"@
+
+Send-MailMessage command to send the email.
+Send-MailMessage -From s1vipems01@coop.org -To "Joe Bechler <joe.bechler@coop.org>" -Subject "SYMRDF Results" -Body $body -Smtpserver TMGSMTP.tmg.net
+#, "Brad Lones <Brad.Lones@coop.org>", "Jonathan Lee <Jonathan.Lee@coop.org>"
