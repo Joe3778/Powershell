@@ -75,19 +75,24 @@ $UniqueGroups
 # Process EACH LINE
 Foreach ($Group in $UniqueGroups)
 {
- $UniqueGroupNum = ($Group | Select-String -Pattern ':\d{1,}').Matches.Value | Out-String
+ $UniqueGroupNum = ($Group | Select-String -Pattern ':\d{1,}').Matches.Value
  $UniqueGroupNum = $UniqueGroupNum -replace '[:]',''
  if ($UniqueGroupNum) {
-	$command = 'echo symrdf resume -file rdfg$UniqueGroupNum.txt -sid 696 -rdfg $UniqueGroupNum -noprompt'
-	iex $command
-	#$WhatDone += $command
+	$command = 'symrdf resume -file rdfg$UniqueGroupNum.txt -sid 696 -rdfg $UniqueGroupNum -noprompt'
+	#$command = 'dir *.*$UniqueGroupNum'
+	#Invoke-Expression $command
+	#Invoke-Expression 'symrdf resume -file rdfg$UniqueGroupNum.txt -sid 696 -rdfg $UniqueGroupNum -noprompt'
+	#$WhatDone += 'symrdf resume -file rdfg$UniqueGroupNum.txt -sid 696 -rdfg $UniqueGroupNum -noprompt' | out-string
+	Invoke-Expression 'dir *.*$UniqueGroupNum'
+	$WhatDone += "dir *.*$UniqueGroupNum" | out-string
+	#$WhatDone += $command | out-string
 	}
  
 }
-#$WhatDoneSplit = $WhatDone -split "`n"
-#$WhatDoneSplit
+$WhatDone
 
 
+#"& '.\Test Document.html'"
 
 
 
